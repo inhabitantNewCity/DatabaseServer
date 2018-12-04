@@ -1,7 +1,7 @@
 #ifndef graph_dll_h
 #define graph_dll_h
 
-#define BASEEXPORTFUNC __cdecl
+#define BASEEXPORTFUNC __stdcall
 #define DLLEXPORT extern "C" __declspec(dllexport)
 //---------------------------------------------------------------------------
 
@@ -13,21 +13,21 @@
 //---------------------------------------------------------------------------
 typedef struct
 {
- unsigned Load_Graph : 1; 
- unsigned Close_Graph : 1;
- unsigned FindPath_Make : 1;
- unsigned GetResultPath : 1;
- unsigned ClearCurrentPath : 1;
+	unsigned Load_Graph : 1;
+	unsigned Close_Graph : 1;
+	unsigned FindPath_Make : 1;
+	unsigned GetResultPath : 1;
+	unsigned ClearCurrentPath : 1;
 } FUN;
 
 //------- Динамическая загрузка GDBMS00.DLL и формирование адресов функций
 HINSTANCE BaseFun(
- int *err,         // Код завершения:
-                   // BERR_OK - адреса всех функций загружены
-                   // BERR_NOINF - хотя бы одна функция не найдена
- FUN *Fun		   // Битовый массив флагов функций. Если бит = 1,
-                   //  функция найдена, если = 0, то не найдена
-                   // Если Fun==NULL, то битовый массив не формируется
+	int *err,         // Код завершения:
+					  // BERR_OK - адреса всех функций загружены
+					  // BERR_NOINF - хотя бы одна функция не найдена
+	FUN *Fun		   // Битовый массив флагов функций. Если бит = 1,
+					   //  функция найдена, если = 0, то не найдена
+					   // Если Fun==NULL, то битовый массив не формируется
 );
 
 typedef bool (BASEEXPORTFUNC *Load_Graph)(const char *name); //wchar_t

@@ -5,7 +5,7 @@
 #ifndef gdbms01_h
 #define gdbms01_h
 
-#define BASEEXPORTFUNC __cdecl
+#define BASEEXPORTFUNC __stdcall
 #define DLLEXPORT extern "C" __declspec(dllexport)
 
 typedef int TREE;

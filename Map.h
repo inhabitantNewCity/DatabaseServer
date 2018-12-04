@@ -1,22 +1,18 @@
 #pragma once
-
-using namespace System;
-using namespace System::Windows::Shapes;
-using namespace System::Drawing;
+#include "Line.h"
 using namespace System::Collections::Generic;
-
 
 ref class Map {
 	
 private:
-	List<Line^>^ lines;
+	List<PMK::Line^>^ lines;
 public:
 	
-	Map(List<Line^>^ intervals) {
+	Map(List<PMK::Line^>^ intervals) {
 		this->lines = intervals;
 	}
 
-	List<Line^>^ getLines() {
+	List<PMK::Line^>^ getLines() {
 		return lines;
 	}
 
@@ -25,32 +21,32 @@ public:
 
 ref class Way{
 private:
-	Point startPoint;
-	Point endPoint;
-	List<Line^>^ intervals;
+	PMK::Point^ startPoint;
+	PMK::Point^ endPoint;
+	List<PMK::Line^>^ intervals;
 public: 
 	
-	Way(List<Line^>^ intervals){
+	Way(List<PMK::Line^>^ intervals){
 		this->intervals = intervals;
 	}
 
-	Point getStartPoint() {
+	PMK::Point^ getStartPoint() {
 		return startPoint;
 	}
 
-	Point getEndPoint() {
+	PMK::Point^ getEndPoint() {
 		return endPoint;
 	}
 
-	List<Line^>^ getList() {
+	List<PMK::Line^>^ getList() {
 		return intervals;
 	}
 
-	void setStartPoint(Point startPoint) {
+	void setStartPoint(PMK::Point^ startPoint) {
 		this->startPoint = startPoint;
 	}
 
-	void setEndPoint(Point endPoint) {
+	void setEndPoint(PMK::Point^ endPoint) {
 		this->endPoint = endPoint;
 	}
 };

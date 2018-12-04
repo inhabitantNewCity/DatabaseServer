@@ -3,11 +3,9 @@
 #include "graph_dll.h"
 #include "GeneralizationDataBaseLoadFuncs.h"
 #include <conio.h>
+#include <iostream>
+#include <fstream>
 
-
-
-//name_base="CORP1FLOOR2";
-//#define BASE_NAME CORP1FLOOR2
 
 struct {
 	GBASE *dataBase;
@@ -20,71 +18,78 @@ struct GBaseCoord
 };
 
 using namespace std;
-bool graph;
-FILE *f;
+ofstream myfile;
+
 Coord* GetWay(Coord coordStart, Coord coordEnd, int *n, char* namebase)
 {
+	bool graph;
+	FILE *f;
 	int error_1;
 	HINSTANCE hdll00;
-	char* graphname;
-	int len=strlen(namebase);
-	//cout<<"len "<<len<<endl;
-	graphname = new char[len+2];       
-				 for(int j=0;j<len;j++)
-				 {
-				  graphname[j]=namebase[j]; 
-				  graphname[len]='.';
-				  graphname[len+1]='g';
-				  graphname[len+2]=0;				
-				 }  
-	//cout<<"graphname "<<graphname<<endl;
-	hdll00=BaseFun(&error_1,NULL);
+
+	hdll00 = BaseFun(&error_1, NULL);
 	if (hdll00 == NULL)
+		return NULL;
+
+	//проверка на наличие такого графа!!
+	f = fopen("CORP1FLOOR2.g", "r+");
+	if (!f)
 	{
-		//printf("Library not found");	
+		cout << "not_graph_file" << endl;
 		return 0;
 	}
-	else 
-		//printf("Library Graph_DLL_Project.dll  - OK\n");
+	else
+	{
+		bool isLoaded = _Load_Graph("CORP1FLOOR2.g");
 
-//проверка на наличие такого графа!!
-		f = fopen(graphname,"rb");
-		if(!f)
-		{
-			cout<<"not_graph_file"<<endl;				
-			return 0;	
-		}
-		else
-		{
-		_Load_Graph(graphname);	
-		//  Close_Graph();	  
-		int pointsCount=0;  
+		int pointsCount = 0;
 		Coord *path;
-		pointsCount =_FindPath_Make(coordStart, coordEnd);
+
+		//(461, 535)
+		//coordStart.x_ = 951;
+		pointsCount = _FindPath_Make(coordStart, coordEnd);
 		*n = pointsCount;
-		if (pointsCount==-1)
-		 {  
+		if (pointsCount == -1)
+		{
 			printf("pCount==-1\n");
-		 }
-		path=new Coord[pointsCount]; 
-		_GetResultPath(path); 
-		return path;
-		// delete [] path;	
+			return NULL;
 		}
+		path = new Coord[pointsCount];
+		_GetResultPath(path);
+		return path;
+	}
 }
 
-Coord* readDataFromObject(GBASE_OBJECT object, int* countPoints) {
+Coord* readDataFromObject(GBASE_OBJECT object, int* countPoints, int i) {
+
 	Coord* result = new Coord[object.qMet];
+	*countPoints = object.qMet;
 	GBaseCoord* points = (GBaseCoord*)object.pMet;
-	for (int i = 0; i < object.qMet; i++) {
-		result[i].x_ = points[i].x;
-		result[i].y_ = points[i].y;
+	long Xiter = 0;
+	long Yiter = 0;
+
+	int effectiveIter = 0;
+
+	for (int i = 0; i < object.qMet * 6; i++) {
+		if ((BASE_INT)((BASE_INT*)object.pMet)[i] <= 0)
+			continue;
+		if (!(effectiveIter % 2)) {
+			result[Xiter++].x_ = (BASE_INT)((BASE_INT*)object.pMet)[i];
+			myfile << Xiter << ". ( x = " << (BASE_INT)((BASE_INT*)object.pMet)[i];
+		}
+		else {
+			result[Yiter++].y_ = (BASE_INT)((BASE_INT*)object.pMet)[i];
+			myfile << ", y = " << (BASE_INT)((BASE_INT*)object.pMet)[i] << ") " << endl;
+		}
+		effectiveIter++;
 	}
+
 	return result;
 }
 
 GBaseWay* GetMap(int *n, char* namebase) {
-	
+	myfile.open("example.txt");
+	myfile << "Map is generating.\n";
 	int err = 0;
 
 	GBaseWay* result;
@@ -96,46 +101,52 @@ GBaseWay* GetMap(int *n, char* namebase) {
 	GBASE_OBJECT Object;
 	GeneralizationDataBaseLoadFuncs* loader = new GeneralizationDataBaseLoadFuncs();
 
-	db.dataBase = loader->_BaseOpen(&err, "CORP1FLOOR2.DPF", "R", NULL, NULL);// return code = -4
+	db.dataBase = loader->_BaseOpen(&err, "CORP1FLOOR2.DPF", "R", NULL, NULL);
 
 	loader->_BaseInitQuery(&Query, 32767, 1);
 
 	err = loader->_BaseObjectCount(db.dataBase, Code,
 		OPEN_TREE, &countWays);
-	
+
 	err = loader->_BaseInitObject(&Object, NULL, 0, NULL, 1,
 		NULL, 1, NULL, 0, NULL, 0,
 		NULL, 0, NULL, 0);
 
+	Object.FlagVideo = Object.FlagVideo | OBJ_VIDEO_ALL;
 
 	err = loader->_BaseReadObject(db.dataBase, &Query, NULL,
-		OPEN_TREE, OBJ_FULL,
+		OPEN_TREE, OBJ_METRIC,
 		&Object, Code, 0);
 
 	result = new GBaseWay[countWays];
-	
+
 	if (err == 0) {
-		result[0].way = readDataFromObject(Object, &countPoints);
+		myfile << endl << "Object # " << 1 << " generating " << endl;
+		result[0].way = readDataFromObject(Object, &countPoints, 0);
 		result[0].size = countPoints;
 	}
-	
+
 	for (int i = 1; err == 0; i++) {
+		myfile << endl << "Object # " << i + 1 << " generating " << endl;
 		loader->_BaseCloseObject(&Object);
 		err = loader->_BaseReadObject(db.dataBase, &Query, NULL,
 			READ_NEXT, OBJ_FULL,
 			&Object, Code, 0);
 		if (err == 0) {
-			result[i].way = readDataFromObject(Object, &countPoints);
-			result[i].size = countPoints;
+			if (i != 35 && i != 34 && i != 32) {
+				result[i].way = readDataFromObject(Object, &countPoints, i);
+				result[i].size = countPoints;
+			}
 		}
+
 	}
-		
+
 	err = loader->_BaseClose(db.dataBase);
-	
-	delete[] loader;
-	delete[] db.dataBase;
+
+	delete loader;
 
 	*n = countWays;
+	myfile.close();
 	return result;
 
 }

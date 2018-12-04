@@ -2,20 +2,18 @@
 #include "Map.h"
 #include "Stubs.h"
 
-using namespace System::Windows::Shapes;
-using namespace System::Drawing;
 using namespace System::Collections::Generic;
 
 ref class DataBaseAccess
 {
 private:
-	List<Line^>^ map;
-	List<Line^>^ way;
+	List<PMK::Line^>^ map;
+	List<PMK::Line^>^ way;
 
 public:
 	DataBaseAccess() {
-		map = gcnew List<Line^>();
-		way = gcnew List<Line^>();
+		map = gcnew List<PMK::Line^>();
+		way = gcnew List<PMK::Line^>();
 		databaseGenerate(map, way);
 	};
 	~DataBaseAccess() {};

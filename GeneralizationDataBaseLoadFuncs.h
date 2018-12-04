@@ -42,17 +42,8 @@ public:
 			LoadFunction(_BaseReadObject, BaseReadObject, "BaseReadObject");
 			LoadFunction(_BaseObjectCount, BaseObjectCount, "BaseObjectCount");
 			LoadFunction(_BaseCodeStr, BaseCodeStr, "BaseCodeStr");
-			/*LoadFunction(BasePrintObjectToFile, _BasePrintObjectToFile, "BasePrintObjectToFile");*/
-
-			//cout << "All functions are loaded" << endl;
-		}
-		else
-		{
-			//cout << "An error occured during opening DLL file, error - " << GetLastError() << endl;
 		}
 	}
 	virtual ~GeneralizationDataBaseLoadFuncs() {};
-
-	/*_BasePrintObjectToFile BasePrintObjectToFile;*/
 };
 

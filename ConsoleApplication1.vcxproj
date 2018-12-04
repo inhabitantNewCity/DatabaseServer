@@ -97,6 +97,7 @@
     <ClInclude Include="gdbms01.h" />
     <ClInclude Include="GeneralizationDataBaseLoadFuncs.h" />
     <ClInclude Include="graph_dll.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Parser.h" />
@@ -109,6 +110,7 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ProjectForReadData_fix28\ProjectForReadData\Stub.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="stdafx.cpp">
