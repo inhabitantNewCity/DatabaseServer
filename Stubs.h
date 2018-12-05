@@ -79,10 +79,10 @@ int databaseGenerate(List<PMK::Line^>^ map, List<PMK::Line^>^ way) {
 		sw->WriteLine("Replication " + (i + 1) + " way data with parameter: count vertex:" + mapCor[i].size);
 		for (int j = 0; j < mapCor[i].size - 1; j++, numberLine++) {
 			PMK::Line^ line = gcnew PMK::Line();
-			line->setX1((float)(mapCor[i].way[j].x_));
-			line->setY1((float)(mapCor[i].way[j].y_));
-			line->setX2((float)(mapCor[i].way[j + 1].x_));
-			line->setY2((float)(mapCor[i].way[j + 1].y_));
+			line->setX1((float)(mapCor[i].way[j].x_) / 10.0f);
+			line->setY1((float)(mapCor[i].way[j].y_) / 10.0f);
+			line->setX2((float)(mapCor[i].way[j + 1].x_) / 10.0f);
+			line->setY2((float)(mapCor[i].way[j + 1].y_) / 10.0f);
 			sw->WriteLine("Line: {(" + line->getX1() + ", " + line->getY1() + "), (" + line->getX2() + ", " + line->getY2() + ")} number = " + numberLine);
 			map->Add(line);
 		}
@@ -90,10 +90,10 @@ int databaseGenerate(List<PMK::Line^>^ map, List<PMK::Line^>^ way) {
 	sw->WriteLine("Opt way");
 	for (int i = countWay - 1; i > 0; i--) {
 		PMK::Line^ line = gcnew PMK::Line();
-		line->setX1((float)(wayCor[i].x_));
-		line->setY1((float)(wayCor[i].y_));
-		line->setX2((float)(wayCor[i - 1].x_));
-		line->setY2((float)(wayCor[i - 1].y_));
+		line->setX1((float)(wayCor[i].x_) / 10.0f);
+		line->setY1((float)(wayCor[i].y_) / 10.0f);
+		line->setX2((float)(wayCor[i - 1].x_) / 10.0f);
+		line->setY2((float)(wayCor[i - 1].y_) / 10.0f);
 		way->Add(line);
 		sw->WriteLine("Line: {(" + line->getX1() + ", " + line->getY1() + "), (" + line->getX2() + ", " + line->getY2() + ")}");
 	}

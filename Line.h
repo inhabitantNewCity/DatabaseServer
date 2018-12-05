@@ -1,5 +1,8 @@
 #pragma once
 
+using namespace System;
+using namespace System::Text;
+
 namespace PMK {
 	ref class Point {
 	public:
@@ -25,6 +28,14 @@ namespace PMK {
 		void setY(float y) {
 			this->y = y;
 		}
+		
+		String^ ToString() override {
+			StringBuilder^ sb = gcnew StringBuilder("{\n");
+			sb->Append("\"x\":\"" + x + "\",\n");
+			sb->Append("\"y\":\"" + y + "\"\n");
+			sb->Append("}");
+			return sb->ToString();
+		}
 
 		~Point() {}
 	};
@@ -46,6 +57,8 @@ namespace PMK {
 			this->a = a;
 			this->b = b;
 		}
+
+		~Line() {}
 
 		Point^ getA() {
 			return a;
@@ -87,5 +100,12 @@ namespace PMK {
 			b->setY(y);
 		}
 
+		String^ ToString() override {
+			StringBuilder^ sb = gcnew StringBuilder("{\n");
+			sb->Append("\"a\":" + a->ToString() + ",\n");
+			sb->Append("\"b\":" + b->ToString() + "\n");
+			sb->Append("}");
+			return sb->ToString();
+		}
 	};
 };

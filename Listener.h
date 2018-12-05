@@ -27,13 +27,14 @@ public: DataAccessListener() {
 	listenThread1 = gcnew Thread(gcnew ParameterizedThreadStart(&DataAccessListener::startlistener));
 	parser = gcnew Parser();
 	dataBaseAcces = gcnew DataBaseAccess();
+
+	Console::WriteLine(L"Listener is configurated");
 }
 
 public: static void startlistener(Object^ s)
 	{
 		while (true)
 		{
-			////blocks until a client has connected to the server
 			ProcessRequest();
 		}
 	}

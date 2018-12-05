@@ -19,8 +19,15 @@ public:
 	~Parser() {};
 
 	array<unsigned char>^ parseMap(Map^ map) {
-		String^ result = "parse map";
-		return parseString(result);
+		StringBuilder^ sb = gcnew StringBuilder("[");
+		List<PMK::Line^>^ list = map->getLines();
+		for (int i = 0; i < list->Count - 1; i++) {
+			sb->Append(list[i]->ToString());
+			sb->Append(",\n");
+		}
+		sb->Append(list[list->Count - 1]->ToString());
+		sb->Append("]");
+		return parseString(sb->ToString());
 	}
 
 	array<unsigned char>^ parseWay(Way^ way) {
