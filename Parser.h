@@ -14,25 +14,29 @@ private:
 		}
 		return bytes;
 	}
-public:
-	Parser() {};
-	~Parser() {};
-
-	array<unsigned char>^ parseMap(Map^ map) {
+	
+	String^ parseList(List<PMK::Line^>^ list) {
 		StringBuilder^ sb = gcnew StringBuilder("[");
-		List<PMK::Line^>^ list = map->getLines();
 		for (int i = 0; i < list->Count - 1; i++) {
 			sb->Append(list[i]->ToString());
 			sb->Append(",\n");
 		}
 		sb->Append(list[list->Count - 1]->ToString());
 		sb->Append("]");
-		return parseString(sb->ToString());
+		return sb->ToString();
+	}
+public:
+	Parser() {};
+	~Parser() {};
+
+	array<unsigned char>^ parseMap(Map^ map) {
+		List<PMK::Line^>^ list = map->getLines();
+		return parseString(parseList(list));
 	}
 
 	array<unsigned char>^ parseWay(Way^ way) {
-		String^ result = "parse way";
-		return parseString(result);
+		List<PMK::Line^>^ list = way->getList();
+		return parseString(parseList(list));
 	}
 	
 };
