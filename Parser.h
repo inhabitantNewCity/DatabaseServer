@@ -3,6 +3,7 @@
 
 using namespace System;
 
+// сервис для формирования json строки по полученным database сущностям
 ref class Parser
 {
 private:

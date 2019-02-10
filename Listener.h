@@ -18,13 +18,18 @@ private:
 	Thread^ listenThread1;
 
 public: MapController() {
+	// создание и отображение сервиса на конкретный URL REST сервиса
+	// параметры базы зафиксированы так как в тестовом режиме доступна только одна база
 	listener = gcnew HttpListener();
 	listener->Prefixes->Add("http://localhost:8080/map/");
 	listener->AuthenticationSchemes = AuthenticationSchemes::Anonymous;
 
 	listener->Start();
 
+	// определение обработчика события вызова end point-а
 	listenThread1 = gcnew Thread(gcnew ParameterizedThreadStart(&MapController::startlistener));
+	
+	// алокация нужных сущьностей для работы обработчика событий
 	parser = gcnew Parser();
 	dataBaseAcces = DataBaseAccess::getInstance();
 
@@ -45,13 +50,14 @@ public: static void ProcessRequest()
 		result->AsyncWaitHandle->WaitOne();
 	}
 
+// обработчик события get map
 public: static void ListenerCallback(IAsyncResult^ result)
 	{
 		HttpListenerContext^ context = listener->EndGetContext(result);
 		Thread::Sleep(1000);
 		String^ data_text = (gcnew StreamReader(context->Request->InputStream, context->Request->ContentEncoding))->ReadToEnd();
 
-
+		// parse database сущностей в json строку
 		array<unsigned char>^ map = parser->parseMap(dataBaseAcces->getMap());
 		
 		Console::WriteLine(map);
@@ -73,7 +79,7 @@ public:
 	~MapController() {};
 };
 
-
+// принцип работы схож с принципом работы MapController-а
 ref class WayController {
 private:
 	static HttpListener^ listener;

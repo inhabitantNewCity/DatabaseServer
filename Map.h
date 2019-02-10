@@ -2,6 +2,8 @@
 #include "Line.h"
 using namespace System::Collections::Generic;
 
+// содержит полную структуру путей движдений
+// может быть расширена в рамках решения
 ref class Map {
 	
 private:
@@ -18,7 +20,8 @@ public:
 
 };
 
-
+// содержит полную структуру оптимального пити движдений
+// может быть расширена в рамках решения
 ref class Way{
 private:
 	PMK::Point^ startPoint;
